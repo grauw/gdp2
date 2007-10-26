@@ -12,5 +12,10 @@ public class protectedCounterValue
 	{
 		value = value + x;
 	}
+	
+	synchronized int getValue()
+	{
+		return value;
+	}
 
 }

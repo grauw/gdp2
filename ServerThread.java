@@ -5,6 +5,7 @@ public class ServerThread extends Thread
 {
 	Node node;
 	Socket RecieveFrom;
+	Socket parentSocket = null;
 	int portnr;
 	int teller;
 	
@@ -20,63 +21,50 @@ public class ServerThread extends Thread
 		try
 		{
 			serverSocket = new ServerSocket(portnr);
+			for(int i = 0; i < node.buren.length; i++) {
+				Socket clientSocket = serverSocket.accept();
+				System.out.println("clientSocket: " + clientSocket.toString());
+				Ontvangen(clientSocket);
+			}
+			node.VerstuurNaarParent();
+			serverSocket.close();
+			System.out.println("serverSocket closed.");
+			System.out.println("Resultaat: " + node.counter.getValue());
 		} 
 		catch (IOException e)
 		{
+			System.out.println(e.toString());
 		}
-		
-		Socket clientSocket = null;
-		try
-		{
-			clientSocket = serverSocket.accept();
-			Ontvangen(clientSocket);
-		}
-		catch (IOException e)
-		{
-		}
-		
-		try
-		{
-			clientSocket.close();
-		}
-		catch (IOException e)
-		{
-		}
-		
-		
 	}
 	
 	public void Ontvangen(Socket s) {
-		System.out.println("Connectie ontvangen van "+s.getPort()+" op "+s.getLocalPort());
+		System.out.println("Connectie ontvangen op "+s.getLocalPort());
 		
-		ObjectMessage om = null;
 		try {
 			InputStream istream = s.getInputStream();
 			ObjectInputStream ois = new ObjectInputStream(istream);
-			om = (ObjectMessage) ois.readObject();
+			ObjectMessage om = (ObjectMessage) ois.readObject();
 			istream.close();
-		} catch (Exception e) {
-			System.out.println(e.getLocalizedMessage());
-		}
-		
-		if (!node.isParent) {
-			node.isParent = true;
 			
-			node.VerzendBuren();
-		} else {
-			// return object die zegt "ik ben niet jouw kind".
-			try
-			{
-				OutputStream ostream = s.getOutputStream();
-				ObjectOutputStream os = new ObjectOutputStream(ostream);
-				ObjectMessage om2 = new ObjectMessage(0);
-				om2.amChild = false;
-				os.writeObject(om2);
-				ostream.close();
-			} catch (Exception e) {
-				System.out.println(e.getLocalizedMessage());
+			node.counter.addTo(om.value);
+			
+			System.out.println("Ontvangen waarde:" + om.value);
+			System.out.println("Counter: " + node.counter.getValue());
+			System.out.println("om.ontvangenPort: " + om.ontvangenPort);
+			System.out.println("node.hasParent: " + node.hasParent);
+			
+			if (!node.hasParent) {
+				node.hasParent = true;
+				node.parentPort = om.ontvangenPort;
+				
+				parentSocket = s;
+				
+				node.VerzendBuren();
 			}
+			s.close();
 			
+		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 	}
 }

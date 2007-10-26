@@ -5,13 +5,15 @@ public class ClientThread extends Thread
 {
 	int port;
 	int value;
-	int[] buren;
+	int parentPort;
+	int ownPort;
 	
-	public ClientThread(int port, int value, int[] buren)
+	public ClientThread(int port, int value, int parentPort, int ownPort)
 	{
 		this.port = port;
 		this.value = value;
-		this.buren = buren;
+		this.parentPort = parentPort;
+		this.ownPort = ownPort;
 	}
 	
 	public void run()
@@ -19,18 +21,24 @@ public class ClientThread extends Thread
 		verzendBericht();
 	}
 	
-	private void verzendBericht()
+	public void verzendBericht()
 	{
+		boolean amChild = false;
+		
+		if(parentPort == port)
+			amChild = true;
+		
 		try
 		{
 			Socket sendTo = new Socket("localhost", port) ;
 			OutputStream ostream = sendTo.getOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(ostream);
-//			os.flush();
+			os.flush();
 			
-			os.writeObject(new ObjectMessage(value));
+			System.out.println("Verstuurde waarde: " + value);
+			os.writeObject(new ObjectMessage(value, amChild, ownPort));
 			
-//			os.flush();
+			os.flush();
 			ostream.close();
 		}
 		catch(IOException q)
