@@ -5,7 +5,7 @@ public class Node
 	boolean isInitiator = false;
 
 	boolean hasParent = false;
-	protectedCounterValue counter;
+	ProtectedCounterValue_GAY counter;
 	
 	
 	public Node (int value, int port, int[] buren)
@@ -14,7 +14,7 @@ public class Node
 		this.port = port;
 		this.buren = buren;
 		
-		counter = new protectedCounterValue(value);
+		counter = new ProtectedCounterValue_GAY(value);
 		
 		if (port == 9999) {
 			isInitiator = true;
