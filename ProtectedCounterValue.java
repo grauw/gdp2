@@ -1,9 +1,9 @@
 
-public class ProtectedCounterValue_GAY
+public class ProtectedCounterValue
 {
 	int value;
 	
-	public ProtectedCounterValue_GAY(int value)
+	public ProtectedCounterValue(int value)
 	{
 		this.value = value;
 	}
