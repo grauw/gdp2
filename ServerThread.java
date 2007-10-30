@@ -23,12 +23,16 @@ public class ServerThread extends Thread
 			serverSocket = new ServerSocket(portnr);
 			for(int i = 0; i < node.buren.length; i++) {
 				Socket clientSocket = serverSocket.accept();
-				System.out.println("clientSocket: " + clientSocket.toString());
+				if(GDP2.HULP)
+					System.out.println("clientSocket: " + clientSocket.toString());
+				
 				Ontvangen(clientSocket);
 			}
 			node.VerstuurNaarParent();
 			serverSocket.close();
-			System.out.println("serverSocket closed.");
+			if(GDP2.HULP)
+				System.out.println("serverSocket closed.");
+			
 			if(node.port == 9999)
 				System.out.println("Resultaat: " + node.counter.getValue());
 		} 
@@ -39,7 +43,8 @@ public class ServerThread extends Thread
 	}
 	
 	public void Ontvangen(Socket s) {
-		System.out.println("Connectie ontvangen op "+s.getLocalPort());
+		if(GDP2.HULP)
+			System.out.println("Connectie ontvangen op "+s.getLocalPort());
 		
 		try {
 			InputStream istream = s.getInputStream();
@@ -49,10 +54,13 @@ public class ServerThread extends Thread
 			
 			node.counter.addTo(om.value);
 			
-			System.out.println("Ontvangen waarde:" + om.value);
-			System.out.println("Counter: " + node.counter.getValue());
-			System.out.println("om.ontvangenPort: " + om.ontvangenPort);
-			System.out.println("node.hasParent: " + node.hasParent);
+			if(GDP2.HULP)
+			{
+				System.out.println("Ontvangen waarde:" + om.value);
+				System.out.println("Counter: " + node.counter.getValue());
+				System.out.println("om.ontvangenPort: " + om.ontvangenPort);
+				System.out.println("node.hasParent: " + node.hasParent);
+			}
 			
 			if (!node.hasParent) {
 				node.hasParent = true;

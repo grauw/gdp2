@@ -35,11 +35,13 @@ public class ClientThread extends Thread
 			ObjectOutputStream os = new ObjectOutputStream(ostream);
 			os.flush();
 			
-			System.out.println("Verstuurde waarde: " + value);
 			os.writeObject(new ObjectMessage(value, amChild, ownPort));
 			
 			os.flush();
 			ostream.close();
+			
+			if (GDP2.HULP)
+				System.out.println("Verstuurde waarde: " + value);
 		}
 		catch(IOException q)
 		{
@@ -52,5 +54,4 @@ public class ClientThread extends Thread
 			{}
 		}
 	}
-
 }

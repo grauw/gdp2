@@ -21,6 +21,9 @@ public class Node
 			parentPort = -2;
 		}
 		
+		if(GDP2.HULP)
+			printNode();
+		
 		WachtOpConnectie();
 		
 		if (isInitiator) {
@@ -69,7 +72,8 @@ public class Node
 		
 		try
 		{
-			System.out.println("counterValue: " + counter.getValue());
+			if(GDP2.HULP)
+				System.out.println("counterValue: " + counter.getValue());
 			t = new ClientThread(parentPort, counter.getValue(), parentPort, port);
 			t.verzendBericht();
 		}
@@ -86,14 +90,18 @@ public class Node
 			y = parentPort;
 		for (int buur: buren)
 		{
-			System.out.println("Buur: " + buur);
-			System.out.println("ParentPort: " + parentPort);
+			if(GDP2.HULP)
+			{	
+				System.out.println("Buur: " + buur);
+				System.out.println("ParentPort: " + parentPort);
+			}
 			if(buur != parentPort)
 			{	
 				Thread t;
 				try
 				{
-					System.out.println("Buur != parentPort: " + buur);
+					if(GDP2.HULP)
+						System.out.println("Buur != parentPort: " + buur);
 					t = new ClientThread(buur, 0, y, port);
 					t.start();
 				}

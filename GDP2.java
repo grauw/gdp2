@@ -1,5 +1,6 @@
 public class GDP2 {
-
+	
+	static final boolean HULP = true;
 	static Node ini;
 	
 	/**
