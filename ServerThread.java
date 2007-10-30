@@ -29,7 +29,8 @@ public class ServerThread extends Thread
 			node.VerstuurNaarParent();
 			serverSocket.close();
 			System.out.println("serverSocket closed.");
-			System.out.println("Resultaat: " + node.counter.getValue());
+			if(node.port == 9999)
+				System.out.println("Resultaat: " + node.counter.getValue());
 		} 
 		catch (IOException e)
 		{
