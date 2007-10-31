@@ -1,18 +1,32 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * ClientThread verzendt een bericht naar een buur en geeft daarin mee zijn
+ * eigen poort en een waarde. Deze waarde staat op 0 als het gaat om het
+ * versturen van berichten die bedoeld zijn om de parent van de buur te worden,
+ * de waarde heeft de daadwerkelijke waarde van de node (en diens kinderen) als
+ * het gaat om een bericht naar de parent van de node.
+ * 
+ * @author mjgraaf
+ * 
+ */
 public class ClientThread extends Thread
 {
 	int port;
 	int value;
-	int parentPort;
 	int ownPort;
 	
-	public ClientThread(int port, int value, int parentPort, int ownPort)
+	/**
+	 * Initialiseert de parameters voor de aanroep van verzendBericht in deze thread.
+	 * @param port Poort waar het bericht heen gestuurd wordt.
+	 * @param value Waarde die meegestuurd wordt. 
+	 * @param ownPort Eigen poortnummer van de node die het bericht verzend.
+	 */
+	public ClientThread(int port, int value, int ownPort)
 	{
 		this.port = port;
 		this.value = value;
-		this.parentPort = parentPort;
 		this.ownPort = ownPort;
 	}
 	
@@ -22,13 +36,11 @@ public class ClientThread extends Thread
 		verzendBericht();
 	}
 	
+	/**
+	 * Verstuurt een bericht naar een poort.
+	 */
 	public void verzendBericht()
-	{
-		boolean amChild = false;
-		
-		if(parentPort == port)
-			amChild = true;
-		
+	{		
 		try
 		{
 			Socket sendTo = new Socket("localhost", port) ;
@@ -36,7 +48,7 @@ public class ClientThread extends Thread
 			ObjectOutputStream os = new ObjectOutputStream(ostream);
 			os.flush();
 			
-			os.writeObject(new ObjectMessage(value, amChild, ownPort));
+			os.writeObject(new ObjectMessage(value, ownPort));
 			
 			os.flush();
 			ostream.close();

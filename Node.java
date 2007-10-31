@@ -76,7 +76,7 @@ public class Node
 		{
 			if(GDP2.HULP)
 				System.out.println("counterValue: " + counter.getValue());
-			t = new ClientThread(parentPort, counter.getValue(), parentPort, port);
+			t = new ClientThread(parentPort, counter.getValue(), port);
 			// niet nodig nieuwe thread te starten
 			t.verzendBericht();
 		}
@@ -86,11 +86,6 @@ public class Node
 	
 	public void verzendBuren()
 	{
-		int y;
-		if(parentPort==-1||parentPort ==-2)
-			y = 2000;
-		else
-			y = parentPort;
 		for (int buur: buren)
 		{
 			if(GDP2.HULP)
@@ -105,7 +100,7 @@ public class Node
 				{
 					if(GDP2.HULP)
 						System.out.println("Buur != parentPort: " + buur);
-					t = new ClientThread(buur, 0, y, port);
+					t = new ClientThread(buur, 0, port);
 					t.start();
 				}
 				catch(Exception e)
