@@ -16,6 +16,7 @@ public class ClientThread extends Thread
 		this.ownPort = ownPort;
 	}
 	
+	@Override
 	public void run()
 	{
 		verzendBericht();

@@ -16,6 +16,7 @@ public class OntvangThread extends Thread {
 		this.serverThread = st;
 	}
 	
+	@Override
 	public void run()
 	{
 		ontvangen(clientSocket);

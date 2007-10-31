@@ -4,7 +4,6 @@ import java.io.*;
 public class ServerThread extends Thread
 {
 	Node node;
-	Socket RecieveFrom;
 	int portnr;
 	int teller;
 	
@@ -15,6 +14,7 @@ public class ServerThread extends Thread
 		this.teller = node.buren.length;
 	}
 	
+	@Override
 	public void run()
 	{
 		ServerSocket serverSocket = null;
