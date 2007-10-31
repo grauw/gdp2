@@ -1,12 +1,22 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * 
+ * @author mjgraaf
+ *
+ */
 public class ServerThread extends Thread
 {
 	Node node;
 	int portnr;
 	int teller;
 	
+	/**
+	 * 
+	 * @param portnr
+	 * @param node
+	 */
 	public ServerThread(int portnr, Node node)
 	{
 		this.portnr = portnr;
@@ -17,6 +27,14 @@ public class ServerThread extends Thread
 	@Override
 	public void run()
 	{
+		newServerListener();
+	}
+	
+	/**
+	 * 
+	 *
+	 */
+	public void newServerListener() {
 		ServerSocket serverSocket = null;
 		try
 		{
@@ -40,6 +58,10 @@ public class ServerThread extends Thread
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public synchronized int decreaseTeller() {
 		return --this.teller;
 	}

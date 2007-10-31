@@ -1,3 +1,8 @@
+/**
+ * 
+ * @author mjgraaf, lholst
+ *
+ */
 public class Node
 {
 	int value, port, parentPort = -1;
@@ -7,7 +12,12 @@ public class Node
 	boolean hasParent = false;
 	ProtectedCounterValue counter;
 	
-	
+	/**
+	 * 
+	 * @param value
+	 * @param port
+	 * @param buren
+	 */
 	public Node (int value, int port, int[] buren)
 	{
 		this.value = value;
@@ -42,6 +52,10 @@ public class Node
 		}
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public void printNode()
 	{
 		System.out.println("--------------------");
@@ -52,6 +66,10 @@ public class Node
 		System.out.println("--------------------");
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 */
 	public void sleeper(int x)
 	{
 		try{
@@ -59,12 +77,20 @@ public class Node
 		} catch(Exception e) {}
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public void wachtOpConnectie()
 	{
 		ServerThread ot = new ServerThread(port, this);
 		ot.start();
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public void verstuurNaarParent()
 	{
 		if (isInitiator)
@@ -84,6 +110,10 @@ public class Node
 		{}
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public void verzendBuren()
 	{
 		for (int buur: buren)
@@ -109,6 +139,10 @@ public class Node
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public synchronized boolean getParent() {
 		boolean hasParent = this.hasParent;
 		this.hasParent = true;

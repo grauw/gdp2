@@ -2,18 +2,28 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
-
+/**
+ * 
+ * @author mjgraaf
+ *
+ */
 public class OntvangThread extends Thread {
 	
 	Node node;
 	Socket clientSocket;
 	ServerThread serverThread;
 	
-	public OntvangThread(Socket s, Node node, ServerThread st)
+	/**
+	 * 
+	 * @param clientSocket
+	 * @param node
+	 * @param serverThread
+	 */
+	public OntvangThread(Socket clientSocket, Node node, ServerThread serverThread)
 	{
-		this.clientSocket = s;
+		this.clientSocket = clientSocket;
 		this.node = node;
-		this.serverThread = st;
+		this.serverThread = serverThread;
 	}
 	
 	@Override
@@ -22,6 +32,10 @@ public class OntvangThread extends Thread {
 		ontvangen(clientSocket);
 	}
 	
+	/**
+	 * 
+	 * @param s
+	 */
 	public void ontvangen(Socket s) {
 		if(GDP2.HULP)
 			System.out.println("Connectie ontvangen op "+s.getLocalPort());
@@ -59,6 +73,10 @@ public class OntvangThread extends Thread {
 		}
 	}
 	
+	/**
+	 * 
+	 *
+	 */
 	public void laatsteThread() {
 		node.verstuurNaarParent();
 		if(node.port == 9999)

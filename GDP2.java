@@ -1,9 +1,15 @@
+/**
+ * 
+ * @author mjgraaf, lholst
+ *
+ */
 public class GDP2 {
 	
 	static final boolean HULP = true;
 	static Node ini;
 	
 	/**
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
@@ -16,6 +22,10 @@ public class GDP2 {
 		
 	}
 	
+	/**
+	 * 
+	 * @param params
+	 */
 	private static void maakNode(String[] params)
 	{
 		int number = Integer.parseInt(params[0]);

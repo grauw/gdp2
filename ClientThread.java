@@ -8,7 +8,7 @@ import java.io.*;
  * de waarde heeft de daadwerkelijke waarde van de node (en diens kinderen) als
  * het gaat om een bericht naar de parent van de node.
  * 
- * @author mjgraaf
+ * @author mjgraaf, lholst
  * 
  */
 public class ClientThread extends Thread
