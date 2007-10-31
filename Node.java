@@ -24,7 +24,7 @@ public class Node
 		if(GDP2.HULP)
 			printNode();
 		
-		WachtOpConnectie();
+		wachtOpConnectie();
 		
 		if (isInitiator) {
 			//Initiator mag geen parent hebben dus wordt deze alvast op true gezet
@@ -32,7 +32,7 @@ public class Node
 			
 
 			
-			VerzendBuren();
+			verzendBuren();
 
 			//We moeten wachten totdat alle threads zeker weten klaar zijn.
 			System.out.println("Resultaat: " + counter.getValue());
@@ -54,16 +54,18 @@ public class Node
 	
 	public void sleeper(int x)
 	{
-		try{Thread.sleep(x);}catch(Exception e){}
+		try{
+			Thread.sleep(x);
+		} catch(Exception e) {}
 	}
 	
-	public void WachtOpConnectie()
+	public void wachtOpConnectie()
 	{
 		ServerThread ot = new ServerThread(port, this);
 		ot.start();
 	}
 	
-	public void VerstuurNaarParent()
+	public void verstuurNaarParent()
 	{
 		if (isInitiator)
 			return;
@@ -75,13 +77,14 @@ public class Node
 			if(GDP2.HULP)
 				System.out.println("counterValue: " + counter.getValue());
 			t = new ClientThread(parentPort, counter.getValue(), parentPort, port);
+			// niet nodig nieuwe thread te starten
 			t.verzendBericht();
 		}
 		catch(Exception e)
 		{}
 	}
 	
-	public void VerzendBuren()
+	public void verzendBuren()
 	{
 		int y;
 		if(parentPort==-1||parentPort ==-2)
@@ -109,5 +112,11 @@ public class Node
 				{}
 			}
 		}
+	}
+	
+	public synchronized boolean getParent() {
+		boolean hasParent = this.hasParent;
+		this.hasParent = true;
+		return hasParent;
 	}
 }
