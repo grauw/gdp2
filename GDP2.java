@@ -5,7 +5,7 @@
  */
 public class GDP2 {
 	
-	static final boolean HULP = true;
+	static final boolean HULP = false;
 	static Node ini;
 	
 	/**

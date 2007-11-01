@@ -43,9 +43,6 @@ public class Node
 
 			
 			verzendBuren();
-
-			//We moeten wachten totdat alle threads zeker weten klaar zijn.
-			System.out.println("Resultaat: " + counter.getValue());
 		}
 		else {
 //			VerstuurNaarParent();
