@@ -3,7 +3,8 @@ import java.io.*;
 
 /**
  * 
- * @author mjgraaf
+ * @author mjgraaf, lhost
+ * @id-nr: 3117308,  
  *
  */
 public class ServerThread extends Thread

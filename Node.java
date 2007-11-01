@@ -1,7 +1,13 @@
 /**
+ * Een Node gaat wachten op een connectie. Pas als er een eerste connectie is
+ * ontvangen gaat hij berichten versturen naar al zijn buren, behalve de parent.
+ * De uitzondering hierop is uiteraard de initiator, die al direct begint met
+ * het versturen van de berichten naar al zijn buren. Als er vervolgens van alle
+ * buren wat is ontvangen, dan wordt er een bericht naar de parent verstuurd,
+ * met de waarde van de node en diens kinderen.
  * 
  * @author mjgraaf, lholst
- *
+ * @id-nr: 3117308, 
  */
 public class Node
 {
@@ -40,18 +46,15 @@ public class Node
 			//Initiator mag geen parent hebben dus wordt deze alvast op true gezet
 			hasParent = true;
 			
-
-			
 			verzendBuren();
-		}
-		else {
-//			VerstuurNaarParent();
 		}
 	}
 	
 	/**
+	 * Deze methode print de waarden van de node uit als hulpmiddel. De buren en
+	 * de counter zijn hieruit gelaten, omdat deze op andere plekken ook al
+	 * geprint worden.
 	 * 
-	 *
 	 */
 	public void printNode()
 	{
@@ -60,23 +63,14 @@ public class Node
 		System.out.println("Value: "+value);
 		System.out.println("ParentPort: " +parentPort);
 		System.out.println("Has a Parent: "+hasParent);
+		System.out.println("Is the initiator: "+isInitiator);
 		System.out.println("--------------------");
 	}
 	
 	/**
+	 * Deze methode maakt een nieuwe ServerThread en start deze, zodat hij gaat
+	 * luisteren op zijn poort naar nieuwe binnenkomende connecties.
 	 * 
-	 * @param x
-	 */
-	public void sleeper(int x)
-	{
-		try{
-			Thread.sleep(x);
-		} catch(Exception e) {}
-	}
-	
-	/**
-	 * 
-	 *
 	 */
 	public void wachtOpConnectie()
 	{
@@ -85,8 +79,10 @@ public class Node
 	}
 	
 	/**
+	 * Deze methode stuurt de waarde van de node, plus de waardes van de
+	 * kinderen, door naar de Parent van de node. Als de node de initiator is
+	 * dan wordt dat afgevangen en wordt er niks verstuurd.
 	 * 
-	 *
 	 */
 	public void verstuurNaarParent()
 	{
@@ -108,8 +104,12 @@ public class Node
 	}
 	
 	/**
+	 * Deze methode verstuurd een bericht met de waarde 0, naar alle buren van
+	 * de node. We sturen de waarde 0, zodat deze zorgeloos kan worden opgeteld
+	 * bij de counter van de buur node en dat dit niet speciaal hoeft te worden
+	 * afgevangen. Hierdoor hoeven we geen extra variabele mee te geven in de
+	 * boodschap.
 	 * 
-	 *
 	 */
 	public void verzendBuren()
 	{
@@ -137,8 +137,10 @@ public class Node
 	}
 	
 	/**
+	 * In deze methode wordt de parent opgevraagd van de node en wordt deze op
+	 * true gezet.
 	 * 
-	 * @return
+	 * @return Geeft terug of de node een parent heeft.
 	 */
 	public synchronized boolean getParent() {
 		boolean hasParent = this.hasParent;

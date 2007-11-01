@@ -3,7 +3,7 @@ import java.io.Serializable;
 /**
  * 
  * @author mjgraaf, lholst
- *
+ * @id-nr: 3117308, 
  */
 public class ObjectMessage implements Serializable
 {

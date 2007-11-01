@@ -5,11 +5,11 @@ import java.io.*;
  * ClientThread verzendt een bericht naar een buur en geeft daarin mee zijn
  * eigen poort en een waarde. Deze waarde staat op 0 als het gaat om het
  * versturen van berichten die bedoeld zijn om de parent van de buur te worden,
- * de waarde heeft de daadwerkelijke waarde van de node (en diens kinderen) als
- * het gaat om een bericht naar de parent van de node.
+ * de waarde heeft de daadwerkelijke waarde van de node (plus van diens kinderen)
+ * als het gaat om een bericht naar de parent van de node.
  * 
  * @author mjgraaf, lholst
- * 
+ * @id-nr: 3117308, 
  */
 public class ClientThread extends Thread
 {

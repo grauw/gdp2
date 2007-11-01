@@ -1,7 +1,9 @@
 /**
+ * GDP2 checkt of er genoeg parameters worden meegegeven en parsed deze naar de
+ * correcte waardes. Vervolgens worden er met die waardes een Node aangemaakt
  * 
  * @author mjgraaf, lholst
- *
+ * @id-nr: 3117308, 
  */
 public class GDP2 {
 	
@@ -9,8 +11,11 @@ public class GDP2 {
 	static Node ini;
 	
 	/**
+	 * De main methode, hierin kijken we of er wel genoeg parameters worden
+	 * meegegeven.
 	 * 
 	 * @param args
+	 *            Reeks parameters in string vorm.
 	 */
 	public static void main(String[] args)
 	{
@@ -23,8 +28,11 @@ public class GDP2 {
 	}
 	
 	/**
+	 * Deze methode maakt van de strings de correcte waardes en maakt daarmee
+	 * een node aan.
 	 * 
 	 * @param params
+	 *            De paramters in string vorm.
 	 */
 	private static void maakNode(String[] params)
 	{

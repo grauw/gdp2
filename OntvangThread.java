@@ -5,7 +5,7 @@ import java.net.Socket;
 /**
  * 
  * @author mjgraaf
- *
+ * @id-nr: 3117308, 
  */
 public class OntvangThread extends Thread {
 	
@@ -46,12 +46,15 @@ public class OntvangThread extends Thread {
 			ObjectMessage om = (ObjectMessage) ois.readObject();
 			istream.close();
 			
+			if(GDP2.HULP)
+				System.out.println("Counter before: " + node.counter.getValue());
+			
 			node.counter.addTo(om.value);
 			
 			if(GDP2.HULP)
 			{
 				System.out.println("Ontvangen waarde:" + om.value);
-				System.out.println("Counter: " + node.counter.getValue());
+				System.out.println("Counter after: " + node.counter.getValue());
 				System.out.println("om.ontvangenPort: " + om.ontvangenPort);
 				System.out.println("node.hasParent: " + node.hasParent);
 			}
