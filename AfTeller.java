@@ -1,5 +1,5 @@
 /**
- * Een object dat vanaf een bepaalde waarde gesynchroniseerd aftelt
+ * Een object dat vanaf een bepaalde waarde atomair aftelt
  * @author mjgraaf, lholst
  * @id-nr: 3117308, 0122173
  */
