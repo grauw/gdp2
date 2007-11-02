@@ -3,7 +3,7 @@
  * correcte waardes. Vervolgens worden er met die waardes een Node aangemaakt
  * 
  * @author mjgraaf, lholst
- * @id-nr: 3117308, 
+ * @id-nr: 3117308, 0122173
  */
 public class GDP2 {
 	
@@ -14,13 +14,12 @@ public class GDP2 {
 	 * De main methode, hierin kijken we of er wel genoeg parameters worden
 	 * meegegeven.
 	 * 
-	 * @param args
-	 *            Reeks parameters in string vorm.
+	 * @param args		Reeks parameters in string vorm.
 	 */
 	public static void main(String[] args)
 	{
 		if(args.length < 4)
-			System.out.println("Geef ten minste vier parameters mee.");
+			System.err.println("Geef ten minste vier parameters mee.");
 		else
 			maakNode(args);
 		
@@ -31,8 +30,7 @@ public class GDP2 {
 	 * Deze methode maakt van de strings de correcte waardes en maakt daarmee
 	 * een node aan.
 	 * 
-	 * @param params
-	 *            De paramters in string vorm.
+	 * @param params   	De paramters in string vorm.
 	 */
 	private static void maakNode(String[] params)
 	{

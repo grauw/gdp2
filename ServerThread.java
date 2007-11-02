@@ -2,40 +2,42 @@ import java.net.*;
 import java.io.*;
 
 /**
+ * Luistert op een ServerSocket, en verwerkt de ontvangen berichten in nieuwe threads.
  * 
  * @author mjgraaf, lhost
- * @id-nr: 3117308,  
+ * @id-nr: 3117308, 0122173
  *
  */
 public class ServerThread extends Thread
 {
-	Node node;
-	int portnr;
-	int teller;
+	private Node node;
+	private int portnr;
 	
 	/**
-	 * 
-	 * @param portnr
-	 * @param node
+	 * Constructor
+	 * @param portnr Het poortnummer voor het ServerSocket.
+	 * @param node Het node-object.
 	 */
 	public ServerThread(int portnr, Node node)
 	{
 		this.portnr = portnr;
 		this.node = node;
-		this.teller = node.buren.length;
 	}
 	
 	@Override
 	public void run()
 	{
-		newServerListener();
+		newServerListener(portnr, node);
 	}
 	
 	/**
-	 * 
-	 *
+	 * Luistert op een nieuw ServerSocket, en start een OntvangThread op om
+	 * elk ontvangen bericht te verwerken. Stopt zodra er net zoveel berichten zijn
+	 * ontvangen als er buren zijn.
+	 * @param portnr Het poortnummer voor het ServerSocket.
+	 * @param node Het node-object.
 	 */
-	public void newServerListener() {
+	public void newServerListener(int portnr, Node node) {
 		ServerSocket serverSocket = null;
 		try
 		{
@@ -44,7 +46,7 @@ public class ServerThread extends Thread
 				Socket clientSocket = serverSocket.accept();
 				if(GDP2.HULP)
 					System.out.println("clientSocket: " + clientSocket.toString());
-				OntvangThread ot = new OntvangThread(clientSocket, node, this);
+				OntvangThread ot = new OntvangThread(clientSocket, node);
 				ot.start();
 			}
 			serverSocket.close();
@@ -57,13 +59,5 @@ public class ServerThread extends Thread
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public synchronized int decreaseTeller() {
-		return --this.teller;
 	}
 }

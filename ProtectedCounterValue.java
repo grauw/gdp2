@@ -1,15 +1,17 @@
 /**
+ * De klasse ProtectedCounterValue houdt voor de node bij wat zijn waarde is,
+ * plus de waardes van de kinderen.
  * 
- * @author mjgraaf
- * @id-nr: 3117308, 
+ * @author mjgraaf, lholst
+ * @id-nr: 3117308, 0122173
  */
 public class ProtectedCounterValue
 {
 	int value;
 	
 	/**
-	 * 
-	 * @param value
+	 * De constructor.
+	 * @param value		De waarde van de node die hem aanmaakt.
 	 */
 	public ProtectedCounterValue(int value)
 	{
@@ -17,19 +19,28 @@ public class ProtectedCounterValue
 	}
 	
 	/**
-	 * 
-	 * @param x
+	 * Telt de waarde x erbij op.
+	 * @param x		De waarde die bij value moet worden opgeteld.
 	 */
-	synchronized void addTo(int x)
+	public void addTo(int x)
 	{
+		if (x != 0)
+			addToSynch(x);
+	}
+	
+	/**
+	 * Telt de waarde x erbij op.
+	 * @param x		De waarde die bij value moet worden opgeteld.
+	 */
+	private synchronized void addToSynch(int x) {
 		value = value + x;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Returned de waarde van de klasse.
+	 * @return		value
 	 */
-	synchronized int getValue()
+	public synchronized int getValue()
 	{
 		return value;
 	}

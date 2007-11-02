@@ -1,28 +1,29 @@
 /**
- * Een Node gaat wachten op een connectie. Pas als er een eerste connectie is
- * ontvangen gaat hij berichten versturen naar al zijn buren, behalve de parent.
- * De uitzondering hierop is uiteraard de initiator, die al direct begint met
- * het versturen van de berichten naar al zijn buren. Als er vervolgens van alle
- * buren wat is ontvangen, dan wordt er een bericht naar de parent verstuurd,
- * met de waarde van de node en diens kinderen.
+ * Een Node gaat wachten op een connectie, dit gebeurd door middel van een
+ * ServerThread. Alleen de initiator verstuurd ook meteen al naar alle buren
+ * berichten om van hun de parent te worden. In de klasse zit verder ook nog de
+ * methode om naar je Parent het bericht met de node waarde en de waardes van de
+ * kinderen te sturen.
  * 
  * @author mjgraaf, lholst
- * @id-nr: 3117308, 
+ * @id-nr: 3117308, 0122173
  */
 public class Node
 {
-	int value, port, parentPort = -1;
+	int value;
+	int port;
+	int parentPort = -1;
 	int[] buren;
-	boolean isInitiator = false;
-
 	boolean hasParent = false;
-	ProtectedCounterValue counter;
+	ProtectedCounterValue counter;	// Een counter die de waardes van de node en diens kinderen bewaard.
+	AfTeller burenTeller;			// Een teller die bijhoudt of van alle buren al wat ontvangen is 
 	
 	/**
-	 * 
-	 * @param value
-	 * @param port
-	 * @param buren
+	 * De constructor van de node. Hier worden de waardes geinitialiseerd en word er op een connectie gewacht.
+	 * De initiator verzend de berichten naar de buren.
+	 * @param value   De waarde van de node.
+	 * @param port    De poort van de node.
+	 * @param buren   Alle buren van de node.
 	 */
 	public Node (int value, int port, int[] buren)
 	{
@@ -31,30 +32,29 @@ public class Node
 		this.buren = buren;
 		
 		counter = new ProtectedCounterValue(value);
-		
-		if (port == 9999) {
-			isInitiator = true;
-			parentPort = -2;
-		}
+		burenTeller = new AfTeller(buren.length);
 		
 		if(GDP2.HULP)
 			printNode();
 		
-		wachtOpConnectie();
+		wachtOpConnectie();		//Het wachten op de connectie van de eerste buur
 		
-		if (isInitiator) {
-			//Initiator mag geen parent hebben dus wordt deze alvast op true gezet
-			hasParent = true;
+		if (isInitiator()) {		//Als het de initiator is verzend naar buren
+			
+			hasParent = true;	//Initiator kan geen parent hebben, dus wordt deze alvast op true gezet.
 			
 			verzendBuren();
 		}
+	}
+	
+	public boolean isInitiator() {
+		return port == 9999;
 	}
 	
 	/**
 	 * Deze methode print de waarden van de node uit als hulpmiddel. De buren en
 	 * de counter zijn hieruit gelaten, omdat deze op andere plekken ook al
 	 * geprint worden.
-	 * 
 	 */
 	public void printNode()
 	{
@@ -63,14 +63,13 @@ public class Node
 		System.out.println("Value: "+value);
 		System.out.println("ParentPort: " +parentPort);
 		System.out.println("Has a Parent: "+hasParent);
-		System.out.println("Is the initiator: "+isInitiator);
+		System.out.println("Is the initiator: "+isInitiator());
 		System.out.println("--------------------");
 	}
 	
 	/**
 	 * Deze methode maakt een nieuwe ServerThread en start deze, zodat hij gaat
 	 * luisteren op zijn poort naar nieuwe binnenkomende connecties.
-	 * 
 	 */
 	public void wachtOpConnectie()
 	{
@@ -79,15 +78,16 @@ public class Node
 	}
 	
 	/**
-	 * Deze methode stuurt de waarde van de node, plus de waardes van de
-	 * kinderen, door naar de Parent van de node. Als de node de initiator is
-	 * dan wordt dat afgevangen en wordt er niks verstuurd.
-	 * 
+	 * Stuur de opgetelde waarde van de node en de waardes van de kinderen door
+	 * naar de parent van de node. Als de node de initiator is dan wordt er niks
+	 * verstuurd, en wordt in plaats daarvan het resultaat geprint.
 	 */
 	public void verstuurNaarParent()
 	{
-		if (isInitiator)
+		if (isInitiator()) {
+			System.out.println("Resultaat: " + counter.getValue());
 			return;
+		}
 		
 		ClientThread t;
 		
@@ -95,21 +95,20 @@ public class Node
 		{
 			if(GDP2.HULP)
 				System.out.println("counterValue: " + counter.getValue());
-			t = new ClientThread(parentPort, counter.getValue(), port);
 			// niet nodig nieuwe thread te starten
-			t.verzendBericht();
+			t = new ClientThread();
+			t.verzendBericht(parentPort, counter.getValue(), port);
 		}
 		catch(Exception e)
 		{}
 	}
 	
 	/**
-	 * Deze methode verstuurd een bericht met de waarde 0, naar alle buren van
-	 * de node. We sturen de waarde 0, zodat deze zorgeloos kan worden opgeteld
-	 * bij de counter van de buur node en dat dit niet speciaal hoeft te worden
-	 * afgevangen. Hierdoor hoeven we geen extra variabele mee te geven in de
-	 * boodschap.
-	 * 
+	 * Deze methode verstuurt een bericht naar de buur-nodes om van deze nodes
+	 * hun parent te worden, als deze nog geen paren hebben. De waarde die in
+	 * het bericht wordt meegegeven is 0, zodat deze zorgeloos kan worden
+	 * opgeteld bij de counter van de buurnode. Hierdoor hoeven we geen extra
+	 * variabele mee te geven in de boodschap.
 	 */
 	public void verzendBuren()
 	{
@@ -120,7 +119,7 @@ public class Node
 				System.out.println("Buur: " + buur);
 				System.out.println("ParentPort: " + parentPort);
 			}
-			if(buur != parentPort)
+			if(buur != parentPort)		//Hierdoor wordt er niet naar de parent verstuurd.
 			{	
 				Thread t;
 				try
@@ -137,10 +136,10 @@ public class Node
 	}
 	
 	/**
-	 * In deze methode wordt de parent opgevraagd van de node en wordt deze op
-	 * true gezet.
+	 * In deze methode wordt getest of deze node al een parent heeft,
+	 * en daarna wordt geset dat deze een parent heeft (“test and set”).
 	 * 
-	 * @return Geeft terug of de node een parent heeft.
+	 * @return Geeft terug of de node al een parent had.
 	 */
 	public synchronized boolean getParent() {
 		boolean hasParent = this.hasParent;

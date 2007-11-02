@@ -9,13 +9,19 @@ import java.io.*;
  * als het gaat om een bericht naar de parent van de node.
  * 
  * @author mjgraaf, lholst
- * @id-nr: 3117308, 
+ * @id-nr: 3117308, 0122173
  */
 public class ClientThread extends Thread
 {
-	int port;
-	int value;
-	int ownPort;
+	private int port;
+	private int value;
+	private int ownPort;
+	
+	/**
+	 * Lege constructor voor als het object niet geïnitialiseerd hoeft te worden
+	 */
+	public ClientThread() {
+	}
 	
 	/**
 	 * Initialiseert de parameters voor de aanroep van verzendBericht in deze thread.
@@ -33,13 +39,16 @@ public class ClientThread extends Thread
 	@Override
 	public void run()
 	{
-		verzendBericht();
+		verzendBericht(port, value, ownPort);
 	}
 	
 	/**
 	 * Verstuurt een bericht naar een poort.
+	 * @param port De poort waar het bericht heen gestuurd wordt.
+	 * @param value Waarde die meegestuurd wordt. 
+	 * @param ownPort Eigen poortnummer van de node die het bericht verzend.
 	 */
-	public void verzendBericht()
+	public void verzendBericht(int port, int value, int ownPort)
 	{		
 		try
 		{
@@ -61,7 +70,7 @@ public class ClientThread extends Thread
 			try
 			{
 				Thread.sleep(200);
-				verzendBericht();
+				verzendBericht(port, value, ownPort);
 			}
 			catch(InterruptedException e)
 			{}

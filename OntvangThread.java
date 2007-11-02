@@ -3,40 +3,45 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 /**
+ * OntvangThread wordt gestart zodra er een connectie is ontvangen.
+ * OntvangThread haalt vervolgens de ObjectMessage binnen en verwerkt deze.
  * 
- * @author mjgraaf
- * @id-nr: 3117308, 
+ * @author mjgraaf, lholst
+ * @id-nr: 3117308, 0122173
  */
 public class OntvangThread extends Thread {
 	
-	Node node;
-	Socket clientSocket;
-	ServerThread serverThread;
+	private Node node;
+	private Socket clientSocket;
 	
 	/**
-	 * 
-	 * @param clientSocket
-	 * @param node
-	 * @param serverThread
+	 * Constructor
+	 * @param clientSocket 	Het clientsocket om van te ontvangen
+	 * @param node 			De node zelf
 	 */
-	public OntvangThread(Socket clientSocket, Node node, ServerThread serverThread)
+	public OntvangThread(Socket clientSocket, Node node)
 	{
 		this.clientSocket = clientSocket;
 		this.node = node;
-		this.serverThread = serverThread;
 	}
 	
 	@Override
 	public void run()
 	{
-		ontvangen(clientSocket);
+		ontvangen(clientSocket, node);
 	}
 	
 	/**
+	 * Ontvangt een ObjectMessage van een socket en probeert de counter met de
+	 * waarde van de ObjectMessage te verhogen. Als dit het eerste ontvangen
+	 * pakket van de node is dan wordt hij parent en verstuurt hij berichten
+	 * naar alle buren, als het het laatste pakket is dat ontvangen moet worden,
+	 * dan verstuurt hij een bericht naar de parent.
 	 * 
-	 * @param s
+	 * @param s     De socket
+	 * @param node  De node zelf
 	 */
-	public void ontvangen(Socket s) {
+	public void ontvangen(Socket s, Node node) {
 		if(GDP2.HULP)
 			System.out.println("Connectie ontvangen op "+s.getLocalPort());
 		
@@ -49,41 +54,31 @@ public class OntvangThread extends Thread {
 			if(GDP2.HULP)
 				System.out.println("Counter before: " + node.counter.getValue());
 			
-			node.counter.addTo(om.value);
+			node.counter.addTo(om.getValue());
 			
 			if(GDP2.HULP)
 			{
-				System.out.println("Ontvangen waarde:" + om.value);
+				System.out.println("Ontvangen waarde:" + om.getValue());
 				System.out.println("Counter after: " + node.counter.getValue());
-				System.out.println("om.ontvangenPort: " + om.ontvangenPort);
+				System.out.println("om.ontvangenPort: " + om.getOntvangenPort());
 				System.out.println("node.hasParent: " + node.hasParent);
 			}
 			
 			if (!node.getParent()) {
-				node.parentPort = om.ontvangenPort;
+				node.parentPort = om.getOntvangenPort();
 				
 				node.verzendBuren();
 			}
 			s.close();
 			
-			if (serverThread.decreaseTeller() == 0) {
-				laatsteThread();
+			// Als dit het laatste ontvangen bericht is, verstuur resultaat dan naar parent 
+			if (node.burenTeller.verlaag() == 0) {
+				node.verstuurNaarParent();
 			}
-
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * 
-	 *
-	 */
-	public void laatsteThread() {
-		node.verstuurNaarParent();
-		if(node.port == 9999)
-			System.out.println("Resultaat: " + node.counter.getValue());
-	}
-
 }
